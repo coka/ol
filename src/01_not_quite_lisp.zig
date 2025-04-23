@@ -47,24 +47,22 @@ test computeBasementEntryPosition {
     try testing.expectEqual(5, computeBasementEntryPosition("()())"));
 }
 
-fn readInput(allocator: std.mem.Allocator) ![]u8 {
-    return try std.fs.cwd().readFileAlloc(
-        allocator,
-        "input.txt",
-        1024 * 1024,
-    );
+const file = @embedFile("inputs/01.txt");
+
+fn partOne(input: []const u8) i32 {
+    const directions = input;
+    return follow(directions);
 }
 
-test "Part One" {
-    const directions = try readInput(testing.allocator);
-    defer testing.allocator.free(directions);
-    const answer = follow(directions);
-    try testing.expectEqual(answer, 138);
+test partOne {
+    try testing.expectEqual(138, partOne(file));
 }
 
-test "Part Two" {
-    const directions = try readInput(testing.allocator);
-    defer testing.allocator.free(directions);
-    const answer = computeBasementEntryPosition(directions);
-    try std.testing.expectEqual(answer, 1771);
+fn partTwo(input: []const u8) u32 {
+    const directions = input;
+    return computeBasementEntryPosition(directions);
+}
+
+test partTwo {
+    try testing.expectEqual(1771, partTwo(file));
 }

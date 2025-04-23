@@ -1,6 +1,13 @@
 const std = @import("std");
-const Allocator = std.mem.Allocator;
 const testing = std.testing;
+
+fn parse(line: []const u8) ![3]u32 {
+    var dimensions = std.mem.splitScalar(u8, line, 'x');
+    const l = try std.fmt.parseInt(u32, dimensions.next().?, 10);
+    const w = try std.fmt.parseInt(u32, dimensions.next().?, 10);
+    const h = try std.fmt.parseInt(u32, dimensions.next().?, 10);
+    return [3]u32{ l, w, h };
+}
 
 fn wrap(l: u32, w: u32, h: u32) u32 {
     const s1, const s2, const s3 = .{ l * w, w * h, h * l };
@@ -28,25 +35,9 @@ test ribbonFor {
     try testing.expectEqual(14, ribbonFor(1, 1, 10));
 }
 
-fn readInput(allocator: Allocator) ![]u8 {
-    return try std.fs.cwd().readFileAlloc(
-        allocator,
-        "input2.txt",
-        1024 * 1024,
-    );
-}
+const file = @embedFile("inputs/02.txt");
 
-fn parse(line: []const u8) ![3]u32 {
-    var dimensions = std.mem.splitScalar(u8, line, 'x');
-    const l = try std.fmt.parseInt(u32, dimensions.next().?, 10);
-    const w = try std.fmt.parseInt(u32, dimensions.next().?, 10);
-    const h = try std.fmt.parseInt(u32, dimensions.next().?, 10);
-    return [3]u32{ l, w, h };
-}
-
-fn part_one(allocator: Allocator) !u32 {
-    const input = try readInput(allocator);
-    defer allocator.free(input);
+fn partOne(input: []const u8) !u32 {
     var sq_ft_of_wrapping_paper: u32 = 0;
     var lines = std.mem.tokenizeAny(u8, input, "\r\n");
     while (lines.next()) |line| {
@@ -56,14 +47,11 @@ fn part_one(allocator: Allocator) !u32 {
     return sq_ft_of_wrapping_paper;
 }
 
-test part_one {
-    const answer = part_one(testing.allocator);
-    try testing.expectEqual(1586300, answer);
+test partOne {
+    try testing.expectEqual(1586300, partOne(file));
 }
 
-fn part_two(allocator: Allocator) !u32 {
-    const input = try readInput(allocator);
-    defer allocator.free(input);
+fn partTwo(input: []const u8) !u32 {
     var feet_of_ribbon: u32 = 0;
     var lines = std.mem.tokenizeAny(u8, input, "\r\n");
     while (lines.next()) |line| {
@@ -73,7 +61,6 @@ fn part_two(allocator: Allocator) !u32 {
     return feet_of_ribbon;
 }
 
-test part_two {
-    const answer = part_two(testing.allocator);
-    try testing.expectEqual(3737498, answer);
+test partTwo {
+    try testing.expectEqual(3737498, partTwo(file));
 }
