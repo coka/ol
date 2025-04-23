@@ -48,7 +48,7 @@ fn part_one(allocator: Allocator) !u32 {
     const input = try readInput(allocator);
     defer allocator.free(input);
     var sq_ft_of_wrapping_paper: u32 = 0;
-    var lines = std.mem.splitScalar(u8, std.mem.trim(u8, input, &std.ascii.whitespace), '\n');
+    var lines = std.mem.tokenizeAny(u8, input, "\r\n");
     while (lines.next()) |line| {
         const l, const w, const h = try parse(line);
         sq_ft_of_wrapping_paper += wrap(l, w, h);
@@ -65,7 +65,7 @@ fn part_two(allocator: Allocator) !u32 {
     const input = try readInput(allocator);
     defer allocator.free(input);
     var feet_of_ribbon: u32 = 0;
-    var lines = std.mem.splitScalar(u8, std.mem.trim(u8, input, &std.ascii.whitespace), '\n');
+    var lines = std.mem.tokenizeAny(u8, input, "\r\n");
     while (lines.next()) |line| {
         const l, const w, const h = try parse(line);
         feet_of_ribbon += ribbonFor(l, w, h);
